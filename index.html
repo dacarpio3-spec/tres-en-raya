@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tres-en-raya</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
+
+                <div class="card shadow">
+                    <div class="card-body p-4">
+
+                        <!-- Título -->
+                        <h1 class="h3 text-center mb-4">Juego 3 en Línea</h1>
+
+                        <!-- Jugador X -->
+                        <div class="row m-1 align-items-center">
+                            <div class="col-3 ">
+                                <img src="img/X.png" alt="equis" class="img-fluid">
+                            </div>
+                            <div class="col-8 ">
+                                <input type="text" id="jugador1" class="form-control form-control-lg text-center" placeholder="jugador 1" maxlength="20">
+                            </div>
+                        </div>
+                        <!-- Jugador O -->
+                        <div class="row m-1 align-items-center">
+                            <div class="col-3">
+                                <img src="img/O.png" alt="circulo" class="img-fluid">
+                            </div>
+                            <div class="col-8">
+                                <input type="text" id="jugador2" class="form-control form-control-lg text-center" placeholder="jugador 2" maxlength="20">
+                            </div>
+                        </div>
+
+                        <!-- Botón iniciar -->
+                        <div class="d-grid mb-4">
+                            <button type="button" id="btnIniciar" class="btn btn-warning btn-lg rounded-pill">Iniciar Juego</button>
+                        </div>
+
+                        <!-- Turno actual -->
+                        <p id="turno" class="fs-5 fw-semibold text-center mb-3">Turno:</p>
+
+                        <!-- Tablero 3x3 -->
+                        <div id="tablero" class="row row-cols-3 g-2">
+
+                            <div class="col">
+                                <div class="ratio ratio-1x1">
+                                    <button type="button" class="btn btn-outline-dark fs-1 fw-bold" data-pos="0">
+                                        <img src="img/fondo_celda.png" alt="fondo" class="img-fluid" >
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="ratio ratio-1x1">
+                                    <button type="button" class="btn btn-outline-dark fs-1 fw-bold" data-pos="1">
+                                        <img src="img/fondo_celda.png" alt="fondo" class="img-fluid" >
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="ratio ratio-1x1">
+                                    <button type="button" class="btn btn-outline-dark fs-1 fw-bold" data-pos="2">
+                                        <img src="img/fondo_celda.png" alt="fondo" class="img-fluid" >
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="ratio ratio-1x1">
+                                    <button type="button" class="btn btn-outline-dark fs-1 fw-bold" data-pos="3">
+                                        <img src="img/fondo_celda.png" alt="fondo" class="img-fluid" >
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="ratio ratio-1x1">
+                                    <button type="button" class="btn btn-outline-dark fs-1 fw-bold" data-pos="4">
+                                        <img src="img/fondo_celda.png" alt="fondo" class="img-fluid" >
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="ratio ratio-1x1">
+                                    <button type="button" class="btn btn-outline-dark fs-1 fw-bold" data-pos="5">
+                                        <img src="img/fondo_celda.png" alt="fondo" class="img-fluid" >
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="ratio ratio-1x1">
+                                    <button type="button" class="btn btn-outline-dark fs-1 fw-bold" data-pos="6">
+                                        <img src="img/fondo_celda.png" alt="fondo" class="img-fluid" >
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="ratio ratio-1x1">
+                                    <button type="button" class="btn btn-outline-dark fs-1 fw-bold" data-pos="7">
+                                        <img src="img/fondo_celda.png" alt="fondo" class="img-fluid" >
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="ratio ratio-1x1">
+                                    <button type="button" class="btn btn-outline-dark fs-1 fw-bold" data-pos="8">
+                                        <img src="img/fondo_celda.png" alt="fondo" class="img-fluid" >
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Array 3x3: 0 = celda vacía, 1 = jugador 1 (X), 2 = jugador 2 (O)
+        let tablero = [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0]
+        ];
+
+        let turnoActual = 1;      // empieza el jugador 1
+        let juegoActivo = false;  // el juego no empieza hasta presionar "Iniciar Juego"
+        let jugadas = 0;          // cuenta las casillas ocupadas (para detectar empate)
+
+        // Imagen que se pone en la celda según el jugador
+        const imagenes = {
+            1: { src: "img/X.png", alt: "equis" },
+            2: { src: "img/O.png", alt: "circulo" }
+        };
+
+        const btnIniciar = document.getElementById("btnIniciar");
+        const textoTurno = document.getElementById("turno");
+        const celdas = document.querySelectorAll("#tablero button");
+
+        // Inputs donde se escriben los nombres y objeto para guardarlos
+        const inputJugador1 = document.getElementById("jugador1");
+        const inputJugador2 = document.getElementById("jugador2");
+        let nombres = { 1: "Jugador 1", 2: "Jugador 2" };
+
+        // Muestra de quién es el turno
+        function mostrarTurno() {
+            textoTurno.textContent = "Turno: " + nombres[turnoActual];
+        }
+
+        // Termina la partida y vuelve a habilitar los nombres para la siguiente
+        function finalizarJuego() {
+            juegoActivo = false;
+            inputJugador1.disabled = false;
+            inputJugador2.disabled = false;
+        }
+
+        // Reinicia el array y las imágenes y deja todo listo para jugar
+        function iniciarJuego() {
+            // leo los nombres escritos; si se dejan vacíos uso un nombre por defecto
+            nombres[1] = inputJugador1.value.trim() || "Jugador 1";
+            nombres[2] = inputJugador2.value.trim() || "Jugador 2";
+            inputJugador1.disabled = true;
+            inputJugador2.disabled = true;
+
+            tablero = [
+                [0, 0, 0],
+                [0, 0, 0],
+                [0, 0, 0]
+            ];
+            turnoActual = 1;
+            jugadas = 0;
+            juegoActivo = true;
+
+            celdas.forEach(function (celda) {
+                const img = celda.querySelector("img");
+                img.src = "img/fondo_celda.png";
+                img.alt = "fondo";
+            });
+
+            mostrarTurno();
+        }
+
+        // Revisa filas, columnas y diagonales. Devuelve true si el jugador ganó
+        function hayGanador(jugador) {
+            // filas y columnas
+            for (let i = 0; i < 3; i++) {
+                if (tablero[i][0] === jugador && tablero[i][1] === jugador && tablero[i][2] === jugador) {
+                    return true;
+                }
+                if (tablero[0][i] === jugador && tablero[1][i] === jugador && tablero[2][i] === jugador) {
+                    return true;
+                }
+            }
+            // diagonales
+            if (tablero[0][0] === jugador && tablero[1][1] === jugador && tablero[2][2] === jugador) {
+                return true;
+            }
+            if (tablero[0][2] === jugador && tablero[1][1] === jugador && tablero[2][0] === jugador) {
+                return true;
+            }
+            return false;
+        }
+
+        // Se ejecuta cuando se hace clic en una celda
+        function jugar(evento) {
+            if (!juegoActivo) {
+                return; // si el juego no ha iniciado (o ya terminó) no pasa nada
+            }
+
+            const celda = evento.currentTarget;
+            const pos = Number(celda.dataset.pos);  // posición de 0 a 8
+            const fila = Math.floor(pos / 3);
+            const columna = pos % 3;
+
+            // si la celda ya está ocupada, no se puede jugar ahí
+            if (tablero[fila][columna] !== 0) {
+                return;
+            }
+
+            // guardo la jugada en el array y cambio la imagen de la celda
+            tablero[fila][columna] = turnoActual;
+            jugadas++;
+
+            const img = celda.querySelector("img");
+            img.src = imagenes[turnoActual].src;
+            img.alt = imagenes[turnoActual].alt;
+
+            // reviso si ganó el jugador actual
+            if (hayGanador(turnoActual)) {
+                finalizarJuego();
+                const ganador = turnoActual;
+                // setTimeout para que se alcance a ver la última imagen antes del alert
+                setTimeout(function () {
+                    alert("Ganó " + nombres[ganador]);
+                }, 100);
+                return;
+            }
+
+            // si se llenó el tablero y nadie ganó, es empate
+            if (jugadas === 9) {
+                finalizarJuego();
+                setTimeout(function () {
+                    alert("Empate");
+                }, 100);
+                return;
+            }
+
+            // cambio de turno
+            turnoActual = (turnoActual === 1) ? 2 : 1;
+            mostrarTurno();
+        }
+
+        btnIniciar.addEventListener("click", iniciarJuego);
+
+        celdas.forEach(function (celda) {
+            celda.addEventListener("click", jugar);
+        });
+    </script>
+
+</body>
+</html>
